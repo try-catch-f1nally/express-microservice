@@ -1,6 +1,6 @@
 {
   "name": "@try-catch-f1nally/express-microservice",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "The minimalistic framework for developing simple applications/microservices",
   "keywords": [
     "express",
