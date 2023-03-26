@@ -17,7 +17,7 @@ export interface ValidationFunction<T> {
   errors: string[];
 }
 
-export type Request = express.Request;
+export type Request = express.Request & Partial<TokenPayload>;
 export type Response = express.Response;
 export type NextFunction = express.NextFunction;
 export type RequestHandler = express.RequestHandler;
