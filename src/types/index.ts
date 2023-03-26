@@ -20,4 +20,6 @@ export interface ValidationFunction<T> {
 export type Request = express.Request;
 export type Response = express.Response;
 export type NextFunction = express.NextFunction;
+export type RequestHandler = express.RequestHandler;
+export type ErrorRequestHandler = express.ErrorRequestHandler;
 export const Router = express.Router;
