@@ -3,6 +3,9 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import log4js from 'log4js';
+import * as ajv from 'ajv';
+import * as ajvFormats from 'ajv-formats';
+import * as ajvErrors from 'ajv-errors';
 
 export interface InternalConfig {
   port: number;
@@ -12,7 +15,6 @@ export interface InternalConfig {
   auth?: {
     publicKey: string;
   };
-  log4js?: log4js.Configuration;
   errorHandler: {
     internalErrorHttpMessage: string;
   };
@@ -31,6 +33,12 @@ export interface InternalConfig {
   cookieParser?: {
     secret?: string | string[];
     options?: cookieParser.CookieParseOptions;
+  };
+  log4js?: log4js.Configuration;
+  ajv?: {
+    options?: ajv.Options;
+    formatPluginOptions?: ajvFormats.FormatsPluginOptions;
+    errorsPluginOptions?: ajvErrors.ErrorMessageOptions;
   };
 }
 
