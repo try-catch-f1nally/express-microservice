@@ -9,7 +9,6 @@ import * as ajvErrors from 'ajv-errors';
 
 export interface InternalConfig {
   port: number;
-  dbUri?: string;
   baseUrl: string;
   forcedShutdownTimeoutInSeconds: number;
   auth?: {
@@ -42,5 +41,4 @@ export interface InternalConfig {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Config extends Partial<InternalConfig> {}

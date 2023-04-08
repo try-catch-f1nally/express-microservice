@@ -25,6 +25,7 @@ module.exports = {
     'no-empty': ['off'],
     'sonarjs/no-ignored-return': ['off'],
     '@typescript-eslint/no-misused-promises': ['error', {checksVoidReturn: false}],
+    '@typescript-eslint/no-empty-interface': ['error', {allowSingleExtends: true}],
     '@typescript-eslint/no-explicit-any': ['off'],
     '@typescript-eslint/no-non-null-assertion': ['off'],
     '@typescript-eslint/no-unsafe-call': ['off'],
