@@ -3,7 +3,7 @@ import ajvFormats from 'ajv-formats';
 import ajvErrors from 'ajv-errors';
 import {JSONSchema} from '../services';
 
-const ajv = new Ajv({allErrors: true, coerceTypes: true});
+const ajv = new Ajv({allErrors: true, coerceTypes: true, useDefaults: true});
 ajvFormats(ajv);
 ajvErrors(ajv);
 
