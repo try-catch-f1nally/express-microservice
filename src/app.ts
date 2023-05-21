@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import {DefaultHandler, ErrorHandler} from './middlewares';
-import {Config, InternalConfig, Controller, Database, ErrorMiddleware, Logger, Middleware} from './types';
+import {Config, InternalConfig, Controller, Connectable, ErrorMiddleware, Logger, Middleware} from './types';
 import {defaultConfig} from './config.default';
 
 export interface ApplicationSettings {
@@ -13,7 +13,7 @@ export interface ApplicationSettings {
   controllers: Array<Controller>;
   defaultHandler?: Middleware;
   errorHandler?: ErrorMiddleware;
-  database?: Database;
+  connectableServices?: Array<Connectable>;
   config?: Config;
 }
 
@@ -23,26 +23,34 @@ export class Application {
   private readonly _controllers: Array<Controller>;
   private readonly _defaultHandler: Middleware;
   private readonly _errorHandler: ErrorMiddleware;
-  private readonly _database?: Database;
+  private readonly _connectableServices?: Array<Connectable>;
   private readonly _logger: Logger;
   private readonly _config: InternalConfig;
   private _server?: http.Server;
 
-  constructor({logger, controllers, middlewares, defaultHandler, errorHandler, database, config}: ApplicationSettings) {
+  constructor({
+    logger,
+    controllers,
+    middlewares,
+    defaultHandler,
+    errorHandler,
+    connectableServices,
+    config
+  }: ApplicationSettings) {
     this._config = Object.assign(defaultConfig, config);
     this._logger = logger;
     this._middlewares = middlewares;
     this._controllers = controllers;
     this._defaultHandler = defaultHandler || new DefaultHandler(this._config);
     this._errorHandler = errorHandler || new ErrorHandler(this._config, logger);
-    this._database = database;
+    this._connectableServices = connectableServices;
     this._registerShutdownHooks();
     this._registerHandlers();
   }
 
   async start() {
     this._logger.info('Starting application...');
-    await this._database?.connect();
+    await Promise.all(this._connectableServices?.map((service) => service.connect()) || []);
     this._startListening();
   }
 
@@ -53,7 +61,7 @@ export class Application {
       await new Promise((resolve) => this._server?.close(() => resolve));
       this._server?.closeAllConnections();
     }
-    await this._database?.close();
+    await Promise.all(this._connectableServices?.map((service) => service.disconnect()) || []);
     this._logger.info('Application successfully stopped');
   }
 
