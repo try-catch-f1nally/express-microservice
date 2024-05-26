@@ -3,6 +3,9 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import log4js from 'log4js';
+import mongoose from 'mongoose';
+import kafkajs from 'kafkajs';
+import * as ioredis from 'ioredis';
 import * as ajv from 'ajv';
 import * as ajvFormats from 'ajv-formats';
 import * as ajvErrors from 'ajv-errors';
@@ -38,6 +41,18 @@ export interface InternalConfig {
     options?: ajv.Options;
     formatPluginOptions?: ajvFormats.FormatsPluginOptions;
     errorsPluginOptions?: ajvErrors.ErrorMessageOptions;
+  };
+  mongodb?: {
+    uri: string;
+    connectionOptions?: mongoose.ConnectOptions;
+  };
+  redis?: {
+    connectionOptions?: ioredis.RedisOptions;
+  };
+  kafka?: {
+    clientOptions: kafkajs.KafkaConfig;
+    producerOptions?: kafkajs.ProducerConfig;
+    consumerOptions: kafkajs.ConsumerConfig;
   };
 }
 

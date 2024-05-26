@@ -1,12 +1,12 @@
 import {Request, Response} from 'express';
 import {Config, InternalConfig, Middleware} from '../types';
-import {defaultConfig} from '../config.default';
+import {getConfigWithDefaults} from '../utils/getConfigWithDefaults';
 
 export class DefaultHandler implements Middleware {
-  private _config: InternalConfig;
+  private readonly _config: InternalConfig;
 
   constructor(config: Config) {
-    this._config = Object.assign(defaultConfig, config);
+    this._config = getConfigWithDefaults(config);
   }
 
   get middleware() {

@@ -1,12 +1,13 @@
 import log4js from 'log4js';
 import {LoggerService} from './types/logger.service.interface';
 import {Config} from '../types';
+import {getConfigWithDefaults} from '../utils/getConfigWithDefaults';
 
 export class Log4jsService implements LoggerService {
-  private _config: Config;
+  private readonly _config: Config;
 
   constructor(config: Config) {
-    this._config = config;
+    this._config = getConfigWithDefaults(config);
     this._init();
   }
 

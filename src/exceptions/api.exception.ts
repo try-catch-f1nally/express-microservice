@@ -1,5 +1,5 @@
 export class ApiError extends Error {
-  public status: number;
+  public readonly status: number;
 
   constructor(status: number, message: string) {
     super(message);
@@ -8,7 +8,7 @@ export class ApiError extends Error {
 }
 
 export class BadRequestError extends ApiError {
-  public errors?: string[];
+  public readonly errors?: string[];
 
   constructor(message: string, errors?: string[]) {
     super(400, message);

@@ -4,8 +4,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import {DefaultHandler, ErrorHandler} from './middlewares';
-import {Config, InternalConfig, Controller, Connectable, ErrorMiddleware, Logger, Middleware} from './types';
-import {defaultConfig} from './config.default';
+import {Config, Connectable, Controller, ErrorMiddleware, InternalConfig, Logger, Middleware, Startable} from './types';
+import {getConfigWithDefaults} from './utils/getConfigWithDefaults';
 
 export interface ApplicationSettings {
   logger: Logger;
@@ -14,36 +14,31 @@ export interface ApplicationSettings {
   defaultHandler?: Middleware;
   errorHandler?: ErrorMiddleware;
   connectableServices?: Array<Connectable>;
+  startableServices?: Array<Startable>;
   config?: Config;
 }
 
 export class Application {
-  private readonly _app: express.Application = express();
+  private readonly _app = express();
   private readonly _middlewares?: Array<Middleware>;
   private readonly _controllers: Array<Controller>;
   private readonly _defaultHandler: Middleware;
   private readonly _errorHandler: ErrorMiddleware;
   private readonly _connectableServices?: Array<Connectable>;
+  private readonly _startableServices?: Array<Startable>;
   private readonly _logger: Logger;
   private readonly _config: InternalConfig;
   private _server?: http.Server;
 
-  constructor({
-    logger,
-    controllers,
-    middlewares,
-    defaultHandler,
-    errorHandler,
-    connectableServices,
-    config
-  }: ApplicationSettings) {
-    this._config = Object.assign(defaultConfig, config);
-    this._logger = logger;
-    this._middlewares = middlewares;
-    this._controllers = controllers;
-    this._defaultHandler = defaultHandler || new DefaultHandler(this._config);
-    this._errorHandler = errorHandler || new ErrorHandler(this._config, logger);
-    this._connectableServices = connectableServices;
+  constructor(settings: ApplicationSettings) {
+    this._config = getConfigWithDefaults(settings.config);
+    this._logger = settings.logger;
+    this._middlewares = settings.middlewares;
+    this._controllers = settings.controllers;
+    this._defaultHandler = settings.defaultHandler || new DefaultHandler(this._config);
+    this._errorHandler = settings.errorHandler || new ErrorHandler(this._config, settings.logger);
+    this._connectableServices = settings.connectableServices;
+    this._startableServices = settings.startableServices;
     this._registerShutdownHooks();
     this._registerHandlers();
   }
@@ -51,6 +46,7 @@ export class Application {
   async start() {
     this._logger.info('Starting application...');
     await Promise.all(this._connectableServices?.map((service) => service.connect()) || []);
+    await Promise.all(this._startableServices?.map((service) => service.start()) || []);
     this._startListening();
   }
 
@@ -62,6 +58,7 @@ export class Application {
       this._server?.closeAllConnections();
     }
     await Promise.all(this._connectableServices?.map((service) => service.disconnect()) || []);
+    await Promise.all(this._startableServices?.map((service) => service.stop()) || []);
     this._logger.info('Application successfully stopped');
   }
 

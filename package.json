@@ -1,6 +1,6 @@
 {
   "name": "@try-catch-f1nally/express-microservice",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "The minimalistic framework for developing simple applications/microservices",
   "keywords": [
     "express",
@@ -79,8 +79,11 @@
     "cookie-parser": "~1.4.6",
     "cors": "~2.8.5",
     "express": "~4.18.2",
+    "ioredis": "~5.4.1",
+    "kafkajs": "~2.2.4",
     "jsonwebtoken": "~9.0.0",
     "log4js": "~6.9.1",
+    "mongoose": "~8.4.0",
     "morgan": "~1.10.0"
   }
 }

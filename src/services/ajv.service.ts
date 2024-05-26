@@ -1,18 +1,18 @@
 import Ajv from 'ajv';
 import ajvFormats from 'ajv-formats';
 import ajvErrors from 'ajv-errors';
-import {ValidationService, JSONSchema} from './types/validation.service.interface';
+import {JSONSchema, ValidationService} from './types/validation.service.interface';
 import {Config} from '../types';
+import {getConfigWithDefaults} from '../utils/getConfigWithDefaults';
 
 export class AjvService implements ValidationService {
   private readonly _ajv: Ajv;
-  private _config: Config;
 
   constructor(config: Config) {
-    this._config = config;
-    this._ajv = new Ajv(Object.assign(this._config.ajv || {}, {allErrors: true}));
-    ajvFormats(this._ajv, this._config.ajv?.formatPluginOptions);
-    ajvErrors(this._ajv, this._config.ajv?.errorsPluginOptions);
+    config = getConfigWithDefaults(config);
+    this._ajv = new Ajv(Object.assign(config.ajv || {}, {allErrors: true}));
+    ajvFormats(this._ajv, config.ajv?.formatPluginOptions);
+    ajvErrors(this._ajv, config.ajv?.errorsPluginOptions);
   }
 
   getValidator<T>(schema: JSONSchema<T>) {

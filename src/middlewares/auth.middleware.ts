@@ -2,12 +2,13 @@ import jwt from 'jsonwebtoken';
 import {Request, Response, NextFunction} from 'express';
 import {Middleware, Config, TokenPayload} from '../types';
 import {UnauthorizedError} from '../exceptions';
+import {getConfigWithDefaults} from '../utils/getConfigWithDefaults';
 
 export class AuthMiddleware implements Middleware {
-  private _config: Config;
+  private readonly _config: Config;
 
   constructor(config: Config) {
-    this._config = config;
+    this._config = getConfigWithDefaults(config);
     if (!this._config.auth?.publicKey) {
       throw Error('Missing authorization public key in config');
     }

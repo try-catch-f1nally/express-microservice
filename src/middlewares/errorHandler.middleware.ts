@@ -1,14 +1,14 @@
 import {Request, Response, NextFunction} from 'express';
 import {ApiError, BadRequestError} from '../exceptions';
 import {ErrorMiddleware, Config, Logger, InternalConfig} from '../types';
-import {defaultConfig} from '../config.default';
+import {getConfigWithDefaults} from '../utils/getConfigWithDefaults';
 
 export class ErrorHandler implements ErrorMiddleware {
-  private _config: InternalConfig;
-  private _logger: Logger;
+  private readonly _config: InternalConfig;
+  private readonly _logger: Logger;
 
   constructor(config: Config, logger: Logger) {
-    this._config = Object.assign(defaultConfig, config);
+    this._config = getConfigWithDefaults(config);
     this._logger = logger;
   }
 

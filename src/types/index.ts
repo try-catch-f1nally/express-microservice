@@ -5,6 +5,7 @@ export * from './interfaces/connectable.interface';
 export * from './interfaces/errorMiddleware.interface';
 export * from './interfaces/logger.interface';
 export * from './interfaces/middleware.interface';
+export * from './interfaces/startable.interface';
 
 export type TokenPayload = {
   user: {
